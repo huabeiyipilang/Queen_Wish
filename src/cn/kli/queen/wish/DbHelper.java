@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.text.TextUtils;
 import android.util.Log;
 
 public class DbHelper extends SQLiteOpenHelper {
@@ -64,14 +65,39 @@ public class DbHelper extends SQLiteOpenHelper {
 				null, null, null, null, WISH_TIME+" desc");
 	}
 	
+	public Cursor getWishCursor(int id){
+		return getReadableDatabase().query(TABLE_WISH, QUERY_COLUM_WISH, 
+				WISH_ID+" = "+id, null, null, null, WISH_TIME+" desc");
+	}
+	
+	public long updateWish(Wish wish){
+		if(wish.id == 0){
+			return 0;
+		}
+		return  this.getWritableDatabase().update(TABLE_WISH, 
+					wishToCv(wish), WISH_ID + " = "+wish.id, null);
+	}
+	
 	public long addWish(Wish wish){
+		return this.getWritableDatabase().insert(DbHelper.TABLE_WISH, "", wishToCv(wish));
+	}
+	
+	private ContentValues wishToCv(Wish wish){
 		ContentValues cv = new ContentValues();
-		cv.put(WISH_CONTENT, wish.content);
-		cv.put(WISH_COMMENT, wish.comment);
-		cv.put(WISH_TIME, wish.time == 0 ? System.currentTimeMillis() : wish.time);
+		if(!TextUtils.isEmpty(wish.content)){
+			cv.put(WISH_CONTENT, wish.content);
+		}
+		if(!TextUtils.isEmpty(wish.comment)){
+			cv.put(WISH_COMMENT, wish.comment);
+		}
+		if(wish.time != 0){
+			cv.put(WISH_TIME, wish.time);
+		}
 		cv.put(WISH_ACHIEVE, wish.achieve);
-		cv.put(WISH_ACHIEVE_TIME, wish.achieve_time);
-		return this.getWritableDatabase().insert(DbHelper.TABLE_WISH, "", cv);
+		if(wish.time != 0){
+			cv.put(WISH_ACHIEVE_TIME, wish.achieve_time);
+		}
+		return cv;
 	}
 
 }

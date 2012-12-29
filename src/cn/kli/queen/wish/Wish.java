@@ -1,6 +1,7 @@
 package cn.kli.queen.wish;
 
 public class Wish {
+	public int id;
 	public String content;
 	public String comment;
 	public long time;

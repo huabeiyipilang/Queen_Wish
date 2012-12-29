@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 public class WishListScreen extends BaseScreen implements OnClickListener{
 	protected DbHelper mDbHelper;
 	private ListView mWishList;
+	private WishAdapter mAdapter;
+	private Klilog klilog = new Klilog(this.getClass());
 
 	public WishListScreen(Context context) {
 		super(context, R.layout.wish_list_screen);
@@ -30,9 +33,14 @@ public class WishListScreen extends BaseScreen implements OnClickListener{
 	    mWishList.setOnItemClickListener(new OnItemClickListener(){
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
 					long arg3) {
-				
+				Cursor c = (Cursor)mAdapter.getItem(pos);
+				int id = c.getInt(c.getColumnIndex(DbHelper.WISH_ID));
+				Message msg = new Message();
+				msg.what = WishComposeScreen.MODE_EDIT;
+				msg.arg1 = id;
+				ScreenTranslate.getInstance().transToWishCompose(msg);
 			}
 	    	
 	    });
@@ -45,10 +53,10 @@ public class WishListScreen extends BaseScreen implements OnClickListener{
 		
 	}
 	
-	private void freshList(){
-	    Cursor cursor = mDbHelper.getWishCursor();
-	    WishAdapter adapter = new WishAdapter(mContext, cursor);
-		mWishList.setAdapter(adapter);
+	private void freshList() {
+		Cursor cursor = mDbHelper.getWishCursor();
+		mAdapter = new WishAdapter(mContext, cursor);
+		mWishList.setAdapter(mAdapter);
 	}
 
 	private class WishAdapter extends CursorAdapter{
@@ -56,7 +64,7 @@ public class WishListScreen extends BaseScreen implements OnClickListener{
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		public WishAdapter(Context context, Cursor c) {
-			super(context, c);
+			super(context, c, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 			inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		}
 
@@ -71,6 +79,7 @@ public class WishListScreen extends BaseScreen implements OnClickListener{
 			String content_text = cursor.getString(cursor.getColumnIndex(DbHelper.WISH_CONTENT));
 			content.setText(content_text);
 		}
+		
 	}
 	
 	@Override
