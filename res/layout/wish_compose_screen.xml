@@ -2,18 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@drawable/wish_bkg" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="1"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:background="#99000000" >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ff33b5e5"
+            android:background="#99392f41"
             android:text="@string/yuanwang" />
 
         <EditText
@@ -26,7 +28,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ff33b5e5"
+            android:background="#99392f41"
             android:text="@string/beizhu" />
 
         <EditText
@@ -45,7 +47,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#ff33b5e5"
+                android:background="#99392f41"
                 android:text="@string/xuyuanriqi" />
 
             <TextView
@@ -64,7 +66,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#ff33b5e5"
+                    android:background="#99392f41"
                     android:text="@string/wanchengriqi" />
 
                 <TextView
@@ -78,7 +80,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#ff33b5e5"
+                android:background="#99392f41"
                 android:text="@string/yuanwangzhuangtai" />
 
             <Spinner
@@ -97,7 +99,7 @@
             android:id="@+id/wish_commit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/xuyuan" />
+            android:text="@string/commit" />
 
         <Button
             android:id="@+id/btn_back"

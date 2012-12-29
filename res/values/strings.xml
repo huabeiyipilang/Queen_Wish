@@ -25,5 +25,6 @@
     </string-array>
     
     <string name="back">返回</string>
+    <string name="commit">提交</string>
 
 </resources>

@@ -41,6 +41,15 @@ public class ScreenTranslate {
 		return sTranslate;
 	}
 	
+	public boolean backToHome(){
+		if(currentScreen != mWishListScreen){
+			transToWishList();
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 	public void transToWishList(){
 		if(currentScreen == null){
 			mWishListScreen.setVisibility(View.VISIBLE);

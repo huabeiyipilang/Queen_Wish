@@ -2,19 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="@drawable/wish_bkg" >
 
     <ListView
         android:id="@+id/wish_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_weight="1"
+        android:background="#99000000" >
     </ListView>
 
     <Button
         android:id="@+id/wish_add"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add Wish" />
+        android:text="@string/xuyuan" />
 
 </LinearLayout>

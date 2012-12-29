@@ -102,6 +102,7 @@ public class WishComposeScreen extends BaseScreen implements OnClickListener {
 			mWishDetails.setVisibility(View.GONE);
 			mContentEdit.getText().clear();
 			mCommitEdit.getText().clear();
+			mStatus.setSelection(DbHelper.STATUS_OPEN);
 		}else{
 			mWishDetails.setVisibility(View.VISIBLE);
 			mAchieveInfo.setVisibility(wish.status == DbHelper.STATUS_ACHIEVED ? View.VISIBLE:View.GONE);
