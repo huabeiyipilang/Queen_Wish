@@ -36,23 +36,56 @@
             android:inputType="textMultiLine" >
         </EditText>
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ff33b5e5"
-            android:text="@string/xuyuanriqi" />
+            android:orientation="vertical" >
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ff33b5e5"
-            android:text="@string/wanchengriqi" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ff33b5e5"
+                android:text="@string/xuyuanriqi" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ff33b5e5"
-            android:text="@string/jieshuyuanyin" />
+            <TextView
+                android:id="@+id/wish_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <LinearLayout
+                android:id="@+id/achieve_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ff33b5e5"
+                    android:text="@string/wanchengriqi" />
+
+                <TextView
+                    android:id="@+id/achieve_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Medium Text"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ff33b5e5"
+                android:text="@string/yuanwangzhuangtai" />
+
+            <Spinner
+                android:id="@+id/wish_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
     </LinearLayout>
 
     <RelativeLayout
@@ -65,6 +98,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/xuyuan" />
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/wish_commit"
+            android:text="@string/back" />
+
     </RelativeLayout>
 
 </LinearLayout>

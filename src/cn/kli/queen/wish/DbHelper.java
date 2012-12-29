@@ -19,11 +19,17 @@ public class DbHelper extends SQLiteOpenHelper {
 	public final static String WISH_CONTENT = "content";
 	public final static String WISH_COMMENT = "comment";
 	public final static String WISH_TIME = "time";
-	public final static String WISH_ACHIEVE_TIME = "achieve_time";
-	public final static String WISH_ACHIEVE = "achieve";
+	public final static String WISH_CLOSE_TIME = "close_time";
+	public final static String WISH_STATUS = "status";
+	
+	public final static int STATUS_OPEN = 0;
+	public final static int STATUS_ACHIEVED = 1;
+	public final static int STATUS_CANNOT_ACHIEVE = 2;
+	public final static int STATUS_CANCEL = 3;
+	
 	
 	final static String[] QUERY_COLUM_WISH = {
-		WISH_CONTENT, WISH_COMMENT, WISH_TIME, WISH_ACHIEVE, WISH_ACHIEVE_TIME, WISH_ID
+		WISH_CONTENT, WISH_COMMENT, WISH_TIME, WISH_STATUS, WISH_CLOSE_TIME, WISH_ID
 	};
 	
 	private static DbHelper sSingleton = null;
@@ -50,8 +56,8 @@ public class DbHelper extends SQLiteOpenHelper {
 				+WISH_CONTENT+" TEXT, "
 				+WISH_COMMENT+" TEXT, "
 				+WISH_TIME+" timestamp, "
-				+WISH_ACHIEVE_TIME+" timestamp, "
-				+WISH_ACHIEVE+ " INTEGER)";
+				+WISH_CLOSE_TIME+" timestamp, "
+				+WISH_STATUS+ " INTEGER)";
 		db.execSQL(create_table_wish);
 	}
 
@@ -93,9 +99,9 @@ public class DbHelper extends SQLiteOpenHelper {
 		if(wish.time != 0){
 			cv.put(WISH_TIME, wish.time);
 		}
-		cv.put(WISH_ACHIEVE, wish.achieve);
-		if(wish.time != 0){
-			cv.put(WISH_ACHIEVE_TIME, wish.achieve_time);
+		cv.put(WISH_STATUS, wish.status);
+		if(wish.close_time != 0){
+			cv.put(WISH_CLOSE_TIME, wish.close_time);
 		}
 		return cv;
 	}
