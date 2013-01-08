@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import cn.kli.queen.communicationservice.ComMessage;
 
 public class WishComposeScreen extends BaseScreen implements OnClickListener {
 	public final static int MODE_NEW = 1;
@@ -150,6 +151,17 @@ public class WishComposeScreen extends BaseScreen implements OnClickListener {
 		case MODE_NEW:
 			wish.time = System.currentTimeMillis();
 			mDbHelper.addWish(wish);
+			ComMessage cmsg = ComManager.getComMessage();
+			StringBuilder builder = new StringBuilder();
+			builder.append("content:"+wish.content);
+			builder.append("\n");
+			builder.append("comment:"+wish.comment);
+			builder.append("\n");
+			builder.append("status :"+mContext.getString(wish.getStatusRes()));
+			builder.append("\n");
+			builder.append("time   :"+wish.getFormatTime());
+			cmsg.content = builder.toString();
+			ComManager.getInstance(mContext).sendMessage(cmsg);
 			break;
 		case MODE_EDIT:
 			wish.id = mCurrentMsg.arg1;
