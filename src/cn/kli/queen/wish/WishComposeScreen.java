@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import cn.kli.queen.communicationclient.ComManager;
 import cn.kli.queen.communicationservice.ComMessage;
 
 public class WishComposeScreen extends BaseScreen implements OnClickListener {

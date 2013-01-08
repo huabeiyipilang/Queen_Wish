@@ -1,4 +1,4 @@
-package cn.kli.queen.wish;
+package cn.kli.queen.communicationclient;
 
 import java.util.LinkedList;
 
@@ -12,6 +12,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import cn.kli.queen.communicationservice.ICommunication;
 import cn.kli.queen.communicationservice.ComMessage;
+import cn.kli.queen.wish.Klilog;
 
 public class ComManager {
 	enum State{
