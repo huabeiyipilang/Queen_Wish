@@ -7,11 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
-import cn.kli.queen.communicationservice.ICommunication;
+import android.widget.Toast;
 import cn.kli.queen.communicationservice.ComMessage;
+import cn.kli.queen.communicationservice.IComCallback;
+import cn.kli.queen.communicationservice.ICommunication;
 import cn.kli.queen.wish.Klilog;
 
 public class ComManager {
@@ -30,14 +33,18 @@ public class ComManager {
 	private ICommunication mService;
 	private ServiceConnection mConnection;
 	private Context mContext;
+	private HandlerThread mHandlerThread;
 	private Handler mHandler;
 	private LinkedList<ComMessage> mMessageQueen = new LinkedList<ComMessage>();
 	private State mState = State.DISCONNECTED;
 	private Klilog klilog = new Klilog(ComManager.class);
-
+	private IComCallback mCallback;
+	
 	private ComManager(Context context){
 		mContext = context;
-		mHandler = new Handler(){
+		mHandlerThread = new HandlerThread("commanager_thread");
+		mHandlerThread.start();
+		mHandler = new Handler(mHandlerThread.getLooper()){
 
 			@Override
 			public void handleMessage(Message msg) {
@@ -54,27 +61,49 @@ public class ComManager {
 					break;
 				case MSG_SERVICE_CONNECTED:
 					mState = State.CONNECTED;
+					try {
+						mService.registerForComState(mCallback);
+					} catch (RemoteException e1) {
+						e1.printStackTrace();
+					}
 					sendMessageFromQueen();
 					break;
 				case MSG_SERVICE_DISCONNECTED:
 					mState = State.DISCONNECTED;
+					try {
+						mService.unRegisterForComState(mCallback);
+					} catch (RemoteException e1) {
+						e1.printStackTrace();
+					}
 					break;
 				case MSG_MESSAGE_SEND:
 					try {
 						ComMessage cmsg = (ComMessage)msg.obj;
 						mService.sendMessage(cmsg);
-						sendEmptyMessage(MSG_MESSAGE_SENT);
+//						sendEmptyMessage(MSG_MESSAGE_SENT);
 					} catch (RemoteException e) {
 						e.printStackTrace();
 					}
 					break;
 				case MSG_MESSAGE_SENT:
+					ComMessage cmsg = (ComMessage)msg.obj;
+					Toast.makeText(mContext, "result = "+cmsg.getCause(), Toast.LENGTH_SHORT).show();
 					sendMessageFromQueen();
 					break;
 				}
 			}
-			
 		};
+
+		mCallback = new IComCallback.Stub() {
+			@Override
+			public void onSendComplete(ComMessage cmsg) throws RemoteException {
+				klilog.i("CMessage send completed , cause:"+cmsg.getCause());
+				Message msg = mHandler.obtainMessage(MSG_MESSAGE_SENT);
+				msg.obj = cmsg;
+				msg.sendToTarget();
+			}
+		};
+		
 	}
 	
 	public static ComManager getInstance(Context context){
@@ -85,7 +114,6 @@ public class ComManager {
 	}
 	
 	public void sendMessage(ComMessage msg) {
-		msg.callBack = mHandler.obtainMessage(MSG_MESSAGE_SENT);
 		mMessageQueen.push(msg);
 		switch (mState) {
 		case DISCONNECTED:
@@ -102,16 +130,23 @@ public class ComManager {
 	}
 	
 	public void sendMessageFromQueen(){
-		ComMessage msg = mMessageQueen.poll();
-		Message message = null;
-		if(msg != null){
-			message = mHandler.obtainMessage(MSG_MESSAGE_SEND);
-			message.obj = msg;
-		}else{
-			message = mHandler.obtainMessage(MSG_UNBIND_SERVICE);
+		ComMessage next = mMessageQueen.pollLast();
+		try {
+			if(next != null){
+				mMessageQueen.remove(next);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		if(message != null){
-			message.sendToTarget();
+		Message msg = null;
+		if(next != null){
+			msg = mHandler.obtainMessage(MSG_MESSAGE_SEND);
+			msg.obj = next;
+		}else{
+			msg = mHandler.obtainMessage(MSG_UNBIND_SERVICE);
+		}
+		if(msg != null){
+			msg.sendToTarget();
 		}
 	}
 	
@@ -135,6 +170,7 @@ public class ComManager {
 	
 	private void unBindService(){
 		mContext.unbindService(mConnection);
+		mConnection = null;
 	}
 
 	private String msgToString(int msg){

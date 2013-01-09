@@ -1,14 +1,18 @@
 package cn.kli.queen.communicationservice;
 
-import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ComMessage implements Parcelable{
+	final static int SUCCESS = 1;
+	final static int ERROR_NETWORK_NOT_ENABLE = 2;
+	final static int ERROR_HOST = 3;
+	final static int ERROR_UNKNOWN = 4;
+	
 	public String from;
 	public String title;
 	public String content;
-	public Message callBack;
+	public int cause;
 	
 	public ComMessage(){
 	}
@@ -17,12 +21,7 @@ public class ComMessage implements Parcelable{
 		from = in.readString();
 		title = in.readString();
 		content = in.readString();
-		try {
-			callBack = in.readParcelable(Message.class.getClassLoader());
-		} catch (Exception e) {
-			e.printStackTrace();
-			callBack = null;
-		}
+		cause = in.readInt();
 	}
 	
 	@Override
@@ -34,7 +33,7 @@ public class ComMessage implements Parcelable{
 		out.writeString(from);
 		out.writeString(title);
 		out.writeString(content);
-		out.writeParcelable(callBack, flags);
+		out.writeInt(cause);
 	}
 	
 	public static final Parcelable.Creator<ComMessage> CREATOR = new Parcelable.Creator<ComMessage>(){
@@ -48,13 +47,25 @@ public class ComMessage implements Parcelable{
 		public ComMessage[] newArray(int size) {
 			return new ComMessage[size];
 		}
-		
 	};
 	
-	public boolean checkEnable(){
-		if(from == null || title == null || content == null || callBack == null){
-			return false;
+	public String getCause(){
+		String res = "";
+		switch(cause){
+		case SUCCESS:
+			res = "SUCCESS";
+			break;
+		case ERROR_NETWORK_NOT_ENABLE:
+			res = "ERROR_NETWORK_NOT_ENABLE";
+			break;
+		case ERROR_HOST:
+			res = "ERROR_HOST";
+			break;
+		case ERROR_UNKNOWN:
+			res = "ERROR_UNKNOWN";
+			break;
 		}
-		return true;
+		return res;
+		
 	}
 }

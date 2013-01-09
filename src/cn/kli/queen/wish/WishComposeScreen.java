@@ -2,7 +2,9 @@ package cn.kli.queen.wish;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.IBinder;
 import android.os.Message;
+import android.os.RemoteException;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,10 +14,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.kli.queen.communicationclient.ComManager;
 import cn.kli.queen.communicationservice.ComMessage;
+import cn.kli.queen.communicationservice.IComCallback;
 
-public class WishComposeScreen extends BaseScreen implements OnClickListener {
+public class WishComposeScreen extends BaseScreen implements OnClickListener{
 	public final static int MODE_NEW = 1;
 	public final static int MODE_EDIT = 2;
 	
