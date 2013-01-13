@@ -64,7 +64,8 @@ public class WishListScreen extends BaseScreen implements OnClickListener{
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		public WishAdapter(Context context, Cursor c) {
-			super(context, c, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
+			super(context, c);
+//			super(context, c, CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
 			inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		}
 

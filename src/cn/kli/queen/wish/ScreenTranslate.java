@@ -65,7 +65,8 @@ public class ScreenTranslate {
 	
 	public void translate(BaseScreen to, Message msg){
 		to.start(msg);
-		flipit(to);
+		display(to);
+//		flipit(to);
 	}
 	
 	private void display(ViewGroup to){
@@ -76,7 +77,7 @@ public class ScreenTranslate {
 		from.setVisibility(View.GONE);
 		to.setVisibility(View.VISIBLE);
 	}
-	
+	/*
 	private void flipit(ViewGroup to){
 		flipit(currentScreen, to);
 	}
@@ -104,4 +105,5 @@ public class ScreenTranslate {
         
         visToInvis.start();
     }
+    */
 }
