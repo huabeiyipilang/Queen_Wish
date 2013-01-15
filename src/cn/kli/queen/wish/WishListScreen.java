@@ -1,10 +1,11 @@
 package cn.kli.queen.wish;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +55,10 @@ public class WishListScreen extends BaseScreen implements OnClickListener{
 	}
 	
 	private void freshList() {
-		Cursor cursor = mDbHelper.getWishCursor();
+		List<Integer> status = new ArrayList<Integer>();
+		status.add(DbHelper.STATUS_OPEN);
+		Cursor cursor = mDbHelper.getWishListByStatus(status);
+//		Cursor cursor = mDbHelper.getWishCursor();
 		mAdapter = new WishAdapter(mContext, cursor);
 		mWishList.setAdapter(mAdapter);
 	}

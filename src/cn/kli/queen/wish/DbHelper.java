@@ -1,5 +1,7 @@
 package cn.kli.queen.wish;
 
+import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -71,9 +73,26 @@ public class DbHelper extends SQLiteOpenHelper {
 				null, null, null, null, WISH_TIME+" desc");
 	}
 	
-	public Cursor getWishCursor(int id){
+	public Cursor getWishListByStatus(List<Integer> status){
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < status.size(); i++){
+			sb.append(WISH_STATUS);
+			sb.append("=");
+			sb.append(status.get(i));
+			if(i != status.size() -1){
+				sb.append(" or ");
+			}
+		}
+		return getWishCursor(sb.toString());
+	}
+	
+	private Cursor getWishCursor(String where){
 		return getReadableDatabase().query(TABLE_WISH, QUERY_COLUM_WISH, 
-				WISH_ID+" = "+id, null, null, null, WISH_TIME+" desc");
+				where, null, null, null, WISH_TIME+" desc");
+	}
+	
+	public Cursor getWishCursor(int id){
+		return getWishCursor(WISH_ID+" = "+id);
 	}
 	
 	public long updateWish(Wish wish){
