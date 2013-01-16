@@ -30,10 +30,7 @@
 
         <receiver android:name="cn.kli.queen.config.QueenReceiver" >
             <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <action android:name="android.intent.action.PACKAGE_REMOVED" />
-
-                <data android:scheme="package" />
+                <action android:name="cn.kli.intent.ENABLE_ENTRY"/>
             </intent-filter>
         </receiver>
     </application>
