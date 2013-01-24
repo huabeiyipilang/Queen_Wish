@@ -1,9 +1,7 @@
 package cn.kli.queen.wish;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,12 +30,19 @@ public class ScreenTranslate {
 		mContainer.addView(mWishComposeScreen);
 	}
 	
+	private ScreenTranslate(Context context){
+		mContext = context;
+	}
+	
 	public static ScreenTranslate create(Context context, ViewGroup container){
 		sTranslate = new ScreenTranslate(context, container);
 		return sTranslate;
 	}
 	
-	public static ScreenTranslate getInstance(){
+	public static ScreenTranslate getInstance(Context context){
+		if(sTranslate == null){
+			sTranslate = new ScreenTranslate(context);
+		}
 		return sTranslate;
 	}
 	
@@ -60,7 +65,9 @@ public class ScreenTranslate {
 	}
 	
 	public void transToWishCompose(Message msg){
-		translate(mWishComposeScreen, msg);
+		Intent intent = new Intent(mContext, WishComposeScreen.class);
+		intent.putExtra("msg", msg);
+		mContext.startActivity(intent);
 	}
 	
 	public void translate(BaseScreen to, Message msg){

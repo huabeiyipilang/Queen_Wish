@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.RemoteException;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
@@ -19,7 +20,7 @@ import cn.kli.queen.communicationclient.ComManager;
 import cn.kli.queen.communicationservice.ComMessage;
 import cn.kli.queen.communicationservice.IComCallback;
 
-public class WishComposeScreen extends BaseScreen implements OnClickListener{
+public class WishComposeScreen extends BaseScreen {
 	public final static int MODE_NEW = 1;
 	public final static int MODE_EDIT = 2;
 	
@@ -38,11 +39,20 @@ public class WishComposeScreen extends BaseScreen implements OnClickListener{
 	private Message mCurrentMsg;
 	private Wish mWish;
 	private Klilog klilog = new Klilog(this.getClass());
-	
+
 	public WishComposeScreen(Context context) {
-		super(context, R.layout.wish_compose_screen);
+		super(context);
+	}
+
+	public WishComposeScreen(Context context, AttributeSet attrs) {
+		super(context, attrs);
 	}
 	
+	@Override
+	int loadLayout() {
+		return R.layout.wish_compose_screen;
+	}
+
 	@Override
 	void onLayoutInflaterFinished(Context context, View root) {
 		mDbHelper = DbHelper.getInstance(context);
@@ -58,9 +68,7 @@ public class WishComposeScreen extends BaseScreen implements OnClickListener{
 		mWishDetails = (LinearLayout)root.findViewById(R.id.details);
 		mAchieveInfo = (LinearLayout)root.findViewById(R.id.achieve_info);
 		mCommit = (Button)root.findViewById(R.id.wish_commit);
-		mCommit.setOnClickListener(this);
 		mBack = (Button)root.findViewById(R.id.btn_back);
-		mBack.setOnClickListener(this);
 	}
 	
 	public void start(Message msg){
@@ -135,19 +143,8 @@ public class WishComposeScreen extends BaseScreen implements OnClickListener{
 			mStatus.setEnabled(false);
 		}
 	}
-	
-	@Override
-	public void onClick(View v) {
-		switch(v.getId()){
-		case R.id.wish_commit:
-			commit();
-		case R.id.btn_back:
-			ScreenTranslate.getInstance().transToWishList();
-			break;
-		}
-	}
-	
-	private void commit() {
+
+	public void commit() {
 		Wish wish = displayToWish();
 		if (wish == null) {
 			return;
@@ -177,4 +174,6 @@ public class WishComposeScreen extends BaseScreen implements OnClickListener{
 			break;
 		}
 	}
+
+
 }

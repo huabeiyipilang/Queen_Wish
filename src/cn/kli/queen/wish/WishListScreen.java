@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Message;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,34 +19,30 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class WishListScreen extends BaseScreen implements OnClickListener{
+public class WishListScreen extends BaseScreen implements OnClickListener, OnItemClickListener{
 	protected DbHelper mDbHelper;
 	private ListView mWishList;
 	private WishAdapter mAdapter;
 	private Klilog klilog = new Klilog(this.getClass());
 
 	public WishListScreen(Context context) {
-		super(context, R.layout.wish_list_screen);
+		super(context);
+	}
+	
+	public WishListScreen(Context context, AttributeSet attrs) {
+		super(context, attrs);
+	}
+
+	@Override
+	int loadLayout() {
+		return R.layout.wish_list_screen;
 	}
 
 	@Override
 	void onLayoutInflaterFinished(Context context, View root) {
 		mDbHelper = DbHelper.getInstance(context);
 	    mWishList = (ListView)root.findViewById(R.id.wish_list);
-	    mWishList.setOnItemClickListener(new OnItemClickListener(){
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int pos,
-					long arg3) {
-				Cursor c = (Cursor)mAdapter.getItem(pos);
-				int id = c.getInt(c.getColumnIndex(DbHelper.WISH_ID));
-				Message msg = new Message();
-				msg.what = WishComposeScreen.MODE_EDIT;
-				msg.arg1 = id;
-				ScreenTranslate.getInstance().transToWishCompose(msg);
-			}
-	    	
-	    });
+	    mWishList.setOnItemClickListener(this);
 	    root.findViewById(R.id.wish_add).setOnClickListener(this);
 	    freshList();
 	}
@@ -53,6 +51,7 @@ public class WishListScreen extends BaseScreen implements OnClickListener{
 	void start(Message msg) {
 		
 	}
+	
 	
 	private void freshList() {
 		List<Integer> status = new ArrayList<Integer>();
@@ -101,11 +100,25 @@ public class WishListScreen extends BaseScreen implements OnClickListener{
 		case R.id.wish_add:
 			Message msg = new Message();
 			msg.what = WishComposeScreen.MODE_NEW;
-			ScreenTranslate.getInstance().transToWishCompose(msg);
+			startComposeActivity(msg);
 			break;
 		}
 	}
 
-
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int pos, long arg3) {
+		Cursor c = (Cursor)mAdapter.getItem(pos);
+		int id = c.getInt(c.getColumnIndex(DbHelper.WISH_ID));
+		Message msg = new Message();
+		msg.what = WishComposeScreen.MODE_EDIT;
+		msg.arg1 = id;
+		startComposeActivity(msg);
+	}
+	
+	private void startComposeActivity(Message msg){
+		Intent intent = new Intent(mContext, WishComposeActivity.class);
+		intent.putExtra("cmd", msg);
+		mContext.startActivity(intent);
+	}
 
 }
